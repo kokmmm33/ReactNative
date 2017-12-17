@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+    <style media="screen" type="text/css">
+        #container {
+            width: 100%;
+            height: 100%;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            position:absolute;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+    </style>
+    <script src="../source/HighChart/highcharts.js"></script>
+</head>
+<body>
+<div id="container"></div>
+
+<script>
+
+    window.document.addEventListener('message',(value)=>{
+        window.postMessage('web收到消息');
+        var data = JSON.parse(value.data).data;
+        data.shift();
+        for (let a of data){
+            window.postMessage(a);
+        }
+
+        createChart(data);
+    });
+
+    function createChart(seriesData) {
+        window.postMessage('创建表格1');
+        const chartColor = 'rgb(201,228,228)';
+        const lagerTextColor = 'rgb(62,106,116)';
+        const ccolor = 'rgb(123,170,175)';
+        window.postMessage('创建表格2');
+        var chart = Highcharts.chart('container', {
+            /*去右下角水印*/
+            credits: {
+                enabled: false
+            },
+
+            xAxis: {
+                type: 'datetime',
+            },
+            series: [{
+                data: seriesData,
+            }]
+        });
+    }
+
+
+
+
+</script>
+
+</body>
+</html>

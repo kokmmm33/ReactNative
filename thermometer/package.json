@@ -7,10 +7,16 @@
 		"test": "jest"
 	},
 	"dependencies": {
+		"convert-string": "^0.1.0",
 		"react": "16.0.0",
-		"react-native": "0.50.4",
+		"react-native": "0.51.0",
+		"react-native-audio": "^3.5.0",
+		"react-native-ble-manager": "^6.2.4",
+		"react-native-button": "^2.1.0",
 		"react-native-highcharts": "^0.2.1",
 		"react-native-segmented-control-tab": "^3.2.1",
+		"react-native-sound": "^0.10.4",
+		"react-native-tab-navigator": "^0.3.4",
 		"react-navigation": "^1.0.0-beta.21"
 	},
 	"devDependencies": {

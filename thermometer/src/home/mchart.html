@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+    <style media="screen" type="text/css">
+        #container {
+            width: 100%;
+            height: 100%;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            position:absolute;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+    </style>
+    <script src="../source/HighChart/highcharts.js"></script>
+    <script src="mchart.js"></script>
+
+</head>
+<body>
+    <div id="container">
+
+    </div>
+    <script>
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        var chart = Highcharts.chart('container',conf);
+
+        var curTimeRange = 2,
+            curTheme,
+            highLimit,
+            lowerLimit;
+        window.document.addEventListener('message',(value)=>{
+            var currentTime = (new Date()).getTime(); // current
+            var data = JSON.parse(value.data);
+
+
+            if (data.type === 'upData') {
+                chart.xAxis[0].setExtremes(currentTime - curTimeRange*60*1000, currentTime);
+                // 约定每2秒刷新一次数据，则可存在的数据点
+                var delFirstPoint = chart.series[0].data.length >= (curTimeRange * 30) ? true : false;
+
+                chart.series[0].addPoint([currentTime, data.value], true, delFirstPoint,true);
+
+
+            }else if (data.type === '高温报警值'){
+                window.postMessage('高温报警值');
+                window.postMessage(data.value);
+                highLimit = data;
+                addLine(data);
+            }else if (data.type === '低温报警值'){
+                window.postMessage('低温报警值');
+                window.postMessage(data.value);
+                lowerLimit = data;
+                addLine(data);
+            }else if (data.type === '设置x数值范围') {
+                curTimeRange = data.value;
+
+                let range = data.value * 60 * 1000;  // 毫秒
+                let floorValue = currentTime - range;  // 开始的刻度值
+                // 单位刻度值
+                const t = [2, 30, 60, 360, 720];
+                const intervals = [30 * 1000, 10 * 60 * 1000, 15 * 60 * 1000, 2 * 3600 * 1000, 4 * 3600 * 1000];
+                var selInterval = intervals[t.indexOf(data.value)];
+                chart.xAxis[0].update({
+                    minRange: range,
+                   floor: (currentTime-range),
+                    startOnTick: false,
+                    endOnTick: false,
+                    tickInterval: selInterval, // 单位刻度间隔值
+                });
+                chart.xAxis[0].setExtremes(currentTime - range, currentTime);
+            }else if (data.type === '主题切换') {
+                curTheme = data.value;
+                updateChartTheme(curTheme);
+            }
+        })
+
+        // 添加标示线
+        function addLine (data) {
+            var lineColor = curTheme.lagerTextColor;
+            chart.yAxis[0].removePlotLine(data.type);
+            chart.yAxis[0].addPlotLine({
+                color:lineColor ? lineColor : 'rgb(83,115,157)',            //线的颜色，
+                dashStyle:'ShortDot',//标示线的样式，默认是solid（实线），这里定义为长虚线
+                value:data.value,                //定义在哪个值上显示标示线，这里是在x轴上刻度为3的值处垂直化一条线
+                width:2,                 //标示线的宽度，2px
+                id:data.type
+            });
+        }
+
+        // 更新表格主题色
+        function updateChartTheme(theme) {
+            var {lagerTextColor, chartColor, ccolor} = theme;
+            chart.update({
+                chart: {
+                    backgroundColor: chartColor ,
+                    /*绘图区背景颜色*/
+                    plotBackgroundColor: chartColor,
+                },
+
+                xAxis: {
+                    lineColor: lagerTextColor,
+
+                    labels:{
+                        style:{
+                            color:lagerTextColor,
+                        },
+                    },
+
+                },
+
+                yAxis: {
+                    title: {
+                        style: {
+                            color: ccolor,
+                        }
+                    },
+
+                    labels: {
+                        style: {
+                            color: lagerTextColor,
+                        }
+                    },
+
+                },
+
+                tooltip: {
+                    crosshairs: [{            // 设置准星线样式
+                        color: ccolor,
+                    }]
+
+                },
+            });
+
+            chart.series[0].update({
+                color: lagerTextColor,
+            });
+
+            addLine(highLimit);
+            addLine(lowerLimit);
+        }
+    </script>
+
+</body>
+</html>
