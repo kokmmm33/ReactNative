@@ -10,6 +10,7 @@ import {
     WebView,
 } from 'react-native';
 import {GlobleColor} from '../globle/GlobleDefine';
+import {tampConvert} from '../globle/TimestampConvert';
 
 export default class HistoryDetailComponent extends Component {
     constructor(props) {
@@ -48,7 +49,23 @@ export default class HistoryDetailComponent extends Component {
     }
 
     render(){
-        const data = this.data;
+        const tamp = this.data.max[0];
+        console.log('时间戳：'+tamp);
+        const newDate = new Date(tamp); 
+        console.log('--====---');
+        var hours = newDate.getHours()
+        var minute = newDate.getMinutes();
+        if (hours.toString().length===1){
+            hours = '0'+hours.toString();
+        }
+        if (minute.toString().length === 1){
+            minute = '0'+minute.toString();
+        }
+
+
+
+        
+
 
         return(
             <View style={styles.container}>
@@ -59,9 +76,9 @@ export default class HistoryDetailComponent extends Component {
                         <Text style={{marginLeft:8, fontSize:19}}>最高温度</Text>
                     </View>
                     <View style={{flexDirection: 'row'}}>
-                        <Text style={styles.lineItemRightTextStyle}>34.90</Text>
+                        <Text style={styles.lineItemRightTextStyle}>{this.data.max[1]}</Text>
                         <View style={{width:2, backgroundColor:GlobleColor.textColor, marginRight:5, marginLeft:5}}/>
-                        <Text style={styles.lineItemRightTextStyle}>10:32</Text>
+                        <Text style={styles.lineItemRightTextStyle}>{hours+':'+minute}</Text>
                     </View>
                 </View>
                 <View style={styles.separatorStyle}/>
