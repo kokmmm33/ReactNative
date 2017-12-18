@@ -107,6 +107,7 @@ var conf={
     /*配置图表要展示的数据*/
     series: [{
         name: '当前温度',
+        id: 'default',
         color: lagerTextColor,
         data: (function () {
             //generate an array of random data

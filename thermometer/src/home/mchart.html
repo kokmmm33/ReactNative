@@ -33,7 +33,13 @@
         var chart = Highcharts.chart('container',conf);
 
         var curTimeRange = 2,
-            curTheme,
+            curTheme={
+                coolColor: 'rgb(174,215,215)',
+                chartColor:'rgb(201,228,228)',
+                lagerTextColor:'rgb(62,106,116)',
+                ccolor: 'rgb(123,170,175)',
+                setIconName:'settingNormal.png'
+            },
             highLimit,
             lowerLimit;
         window.document.addEventListener('message',(value)=>{
@@ -50,12 +56,12 @@
 
 
             }else if (data.type === '高温报警值'){
-                window.postMessage('高温报警值');
+                window.postMessage('web执行高温报警值');
                 window.postMessage(data.value);
                 highLimit = data;
                 addLine(data);
             }else if (data.type === '低温报警值'){
-                window.postMessage('低温报警值');
+                window.postMessage('web执行低温报警值');
                 window.postMessage(data.value);
                 lowerLimit = data;
                 addLine(data);
@@ -84,14 +90,22 @@
 
         // 添加标示线
         function addLine (data) {
-            var lineColor = curTheme.lagerTextColor;
+            var lineColor = curTheme.lagerTextColor ? curTheme.lagerTextColor : 'rgb(83,115,157)';
+
             chart.yAxis[0].removePlotLine(data.type);
             chart.yAxis[0].addPlotLine({
-                color:lineColor ? lineColor : 'rgb(83,115,157)',            //线的颜色，
+                color:lineColor,            //线的颜色，
                 dashStyle:'ShortDot',//标示线的样式，默认是solid（实线），这里定义为长虚线
                 value:data.value,                //定义在哪个值上显示标示线，这里是在x轴上刻度为3的值处垂直化一条线
                 width:2,                 //标示线的宽度，2px
-                id:data.type
+                id:data.type,
+                label:{
+                        align: 'right',
+                        text: data.value.toString()+'℃',
+                        style:{
+                            color: lineColor,
+                        }
+                    }
             });
         }
 
@@ -137,11 +151,16 @@
                     }]
 
                 },
+                series: [{
+                    id: 'default',
+                    color: lagerTextColor,
+                }],
             });
 
-            chart.series[0].update({
-                color: lagerTextColor,
-            });
+            // chart.series[0].update({
+            //     id: 'default',
+            //     color: lagerTextColor,
+            // });
 
             addLine(highLimit);
             addLine(lowerLimit);

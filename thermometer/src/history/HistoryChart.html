@@ -22,40 +22,123 @@
 <div id="container"></div>
 
 <script>
+    const chartColor = 'rgb(201,228,228)';
+    const lagerTextColor = 'rgb(62,106,116)';
+    const ccolor = 'rgb(123,170,175)';
+    var chart;
 
     window.document.addEventListener('message',(value)=>{
         window.postMessage('web收到消息');
-        var data = JSON.parse(value.data).data;
-        data.shift();
+        var data = JSON.parse(value.data).data; 
         for (let a of data){
             window.postMessage(a);
         }
-
-        createChart(data);
+        window.postMessage('limitH:');
+        window.postMessage(JSON.parse(value.data).limitH);
+        createChart(data,JSON.parse(value.data).limitH,JSON.parse(value.data).limitL);
     });
 
-    function createChart(seriesData) {
+    function createChart(seriesData, H, L) {
         window.postMessage('创建表格1');
-        const chartColor = 'rgb(201,228,228)';
-        const lagerTextColor = 'rgb(62,106,116)';
-        const ccolor = 'rgb(123,170,175)';
         window.postMessage('创建表格2');
-        var chart = Highcharts.chart('container', {
+
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        chart = Highcharts.chart('container', {
             /*去右下角水印*/
             credits: {
                 enabled: false
             },
 
+            title: {
+                text: '  ',
+            },
+
+            subtitle: {
+               text: '  ',
+            },
+
             xAxis: {
                 type: 'datetime',
             },
+            
+            yAxis: {
+                title: '温度',
+                gridLineWidth: 0,
+
+                // plotLines: [{ 
+                //     color: chartColor,            //线的颜色，
+                //     dashStyle:'ShortDot',//标示线的样式，默认是solid（实线），这里定义为长虚线
+                //     value: H,                //定义在哪个值上显示标示线，这里是在x轴上刻度为3的值处垂直化一条线
+                //     width: 2,                 //标示线的宽度，2px
+                //     label:{
+                //         align: 'right',
+                //         text: H.toString()+'℃',
+                //         }
+                //     },{ 
+                //     color: chartColor,            //线的颜色，
+                //     dashStyle:'ShortDot',//标示线的样式，默认是solid（实线），这里定义为长虚线
+                //     value: L,                  //定义在哪个值上显示标示线，这里是在x轴上刻度为3的值处垂直化一条线
+                //     width: 2,                 //标示线的宽度，2px
+                //     label:{
+                //         align: 'right',
+                //         text: L.toString()+'℃',
+                //         }
+                // }],
+            },
+
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                    Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                    Highcharts.numberFormat(this.y, 2);
+                },
+            },
+
+            crosshairs: [{            // 设置准星线样式
+                width: 1,
+                color: ccolor,
+                dashStyle:'ShortDash',
+            }],
+
             series: [{
                 data: seriesData,
+                name: '当前温度',
             }]
         });
+
+        if (H > 0) {
+            addLine(H);
+        }
+
+        if (L > 0) {
+            addLine(L);
+        }
     }
 
-
+// 添加标示线
+        function addLine (data) {
+            var lineColor = chartColor;
+            window.postMessage('创建表示线11');
+            chart.yAxis[0].addPlotLine({
+                color:lineColor,            //线的颜色，
+                dashStyle:'ShortDot',//标示线的样式，默认是solid（实线），这里定义为长虚线
+                value:data,                //定义在哪个值上显示标示线，这里是在x轴上刻度为3的值处垂直化一条线
+                width:2,                 //标示线的宽度，2px
+                label:{
+                        align: 'right',
+                        text: data.toString()+'℃',
+                        style:{
+                            color: lineColor,
+                        }
+                    }
+            });
+            window.postMessage('创建表示线22');
+        }
 
 
 </script>

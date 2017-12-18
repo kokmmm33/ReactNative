@@ -37,7 +37,7 @@ export default class HomeComponent extends Component {
           selected: 0,
           limitHight: 0,
           limitLower: 0,
-          currentValue: 0,
+          currentValue: 35.00,
           currentStatus: this.status.normal,
           todaySeries:[],
           series:[],
@@ -100,7 +100,6 @@ export default class HomeComponent extends Component {
                 displayValue:this.state.currentValue
             })
 
-
             if (this.state.limitHight < this.state.currentValue){
                 if (this.state.currentStatus === this.status.high) {
                     return;
@@ -155,7 +154,13 @@ export default class HomeComponent extends Component {
                 })
 
                 let dateTime = (new Date()).toLocaleDateString();
-                let dataJson = {dateStr: dateTime,max: max,data: seriePoint};
+                let dataJson = {
+                    dateStr: dateTime,
+                    max: max,
+                    limitH: this.state.limitHight,
+                    limitL: this.state.limitLower,
+                    data: seriePoint
+                };
                 console.log('this.state.series:'+this.state.series+'type:'+typeof(this.state.series));
                 console.log(dataJson);
                 this.state.series.push(dataJson);
@@ -230,7 +235,6 @@ export default class HomeComponent extends Component {
                         scalesPageToFit={true}
                         scrollEnabled={false}
                     />
-
                 </View>
 
 
@@ -247,7 +251,6 @@ export default class HomeComponent extends Component {
                         />
                     </View>
                 </View>
-
             </View>
         );
     }
@@ -304,9 +307,9 @@ export default class HomeComponent extends Component {
                         let posData = {'type':'高温报警值','value':result}
                         if (this.webview){
                             this.webview.postMessage(JSON.stringify(posData));
-                            console.log('web加载完成');
+                            console.log('高温报警值加载数据完成');
                         }else {
-                            console.log('web未加载');
+                            console.log('高温报警值未加载');
                         }
 
                     }
@@ -325,9 +328,9 @@ export default class HomeComponent extends Component {
                         let posData = {'type':'低温报警值','value':result}
                         if (this.webview){
                             this.webview.postMessage(JSON.stringify(posData));
-                            console.log('web加载完成');
+                            console.log('低温报警值加载数据完成');
                         }else {
-                            console.log('web未加载');
+                            console.log('低温报警值未加载');
                         }
 
                     }
