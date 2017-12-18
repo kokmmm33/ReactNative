@@ -410,7 +410,6 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight:'500',
         marginTop:10,
-
     },
 
     settingIconStyle: {
@@ -432,7 +431,7 @@ const styles = StyleSheet.create({
     },
 
     topStyle: {
-        height: 180,
+        height: height*0.3,
         alignItems: 'center',
         justifyContent: 'center',
         /*导航栏高度*/
@@ -443,14 +442,14 @@ const styles = StyleSheet.create({
     },
 
     chartBgStyle: {
-        height: 350,
+        height: height*0.45,
         width: width,
     },
 
     bottomStyle: {
         alignItems: 'center',
         justifyContent: 'center',
-        height: 80,
+        height: Platform.OS === 'iOS' ? height*0.25:height*0.1,
     },
 
     segmentedControlStyle: {
