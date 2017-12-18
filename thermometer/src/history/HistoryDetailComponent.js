@@ -100,7 +100,7 @@ export default class HistoryDetailComponent extends Component {
                         domStorageEnabled={true}
                         decelerationRate="normal"
                         startInLoadingState={true}
-                        scalesPageToFit={true}
+                        scalesPageToFit={false}
                         scrollEnabled={false}
                         onMessage={this.handleMessage}
                     />

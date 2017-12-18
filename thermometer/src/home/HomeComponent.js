@@ -191,6 +191,15 @@ export default class HomeComponent extends Component {
             icon = require('../source/settingNormal.png');
         }
 
+        var HTMLsource;
+
+        if (Platform.OS === 'android') {
+            HTMLsource  = { uri:'file:///android_asset/mchart.html' }
+        }else{
+            HTMLsource = require('./mchart.html');
+        }
+
+
         return(
             <View style={styles.container}>
 
@@ -226,7 +235,9 @@ export default class HomeComponent extends Component {
                         onMessage={this.handleMessage}
                         ref={webview => { this.webview = webview; }}
                         automaticallyAdjustContentInsets={true}
-                        source={require('./mchart.html')}
+                        mixedContentMode={'always'}
+
+                        source={HTMLsource}
                         javaScriptEnabled={true}
                         domStorageEnabled={true}
                         decelerationRate="normal"
