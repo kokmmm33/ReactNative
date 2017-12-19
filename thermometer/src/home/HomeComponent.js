@@ -201,7 +201,7 @@ export default class HomeComponent extends Component {
 
 
         return(
-            <View style={styles.container}>
+            <View style={[styles.container,{backgroundColor: curTheme.chartColor}]}>
 
                 <View style={[styles.headerStyle,{backgroundColor: curTheme.coolColor}]}>
 
@@ -361,8 +361,6 @@ export default class HomeComponent extends Component {
                 return;
             }
 
-
-
             this.whoosh.setVolume(0.5);
             this.whoosh.play((success) => {
                 if (success) {
@@ -395,7 +393,6 @@ export default class HomeComponent extends Component {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: 'white',
     },
 
     headerStyle: {
@@ -434,7 +431,6 @@ const styles = StyleSheet.create({
         height: height*0.3,
         alignItems: 'center',
         justifyContent: 'center',
-        /*导航栏高度*/
     },
 
     topTextStyle: {
@@ -448,15 +444,13 @@ const styles = StyleSheet.create({
 
     bottomStyle: {
         alignItems: 'center',
-        justifyContent: 'center',
-        height: Platform.OS === 'iOS' ? height*0.25:height*0.1,
+        paddingTop: 15,
+        height: height*0.25,
     },
 
     segmentedControlStyle: {
-        justifyContent: 'center',
         width:width*0.8,
         height: 50,
-
     },
 
 })
