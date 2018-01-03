@@ -107,7 +107,7 @@ export default class HomeComponent extends Component {
                 this.setState({
                     currentStatus:this.status.high
                 });
-                //this.playSound('当前温度已超过设置温度');
+                this.playSound('当前温度已超过设置温度');
                 this.setState({
                     themeColor: HighThemeColors
                 });
@@ -119,7 +119,7 @@ export default class HomeComponent extends Component {
                 this.setState({
                     currentStatus:this.status.lower
                 });
-                //this.playSound('当前温度低于设置温度');
+                this.playSound('当前温度低于设置温度');
                 this.setState({
                     themeColor: LowerThemeColors
                 });
@@ -352,6 +352,7 @@ export default class HomeComponent extends Component {
         }
     }
 
+    // 播放报警
     playSound(meg){
         Sound.setCategory('Playback');
         this.stopSound;

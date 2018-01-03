@@ -15,6 +15,7 @@ import {
     DeviceEventEmitter
 } from 'react-native';
 import {LowerThemeColors} from '../globle/GlobleDefine';
+import {Wheel} from 'teaset';
 
 const {width, height} = Dimensions.get('window');
 
@@ -23,11 +24,16 @@ export default class LimitDetailComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            largerValue: '35',
-            decimalValue: '5',
+            largerValue: 30,
+            decimalValue: 0,
         };
         this.titleKey = this.props.navigation.state.params.screenTitle[0];
-       
+        this.item1 = [];
+        this.item2 = [];
+        for(let i = 0; i < 10; i++) {
+            this.item1.push((i+30));
+            this.item2.push(i);
+        }
     }
 
     static navigationOptions = ({navigation}) => ({
@@ -50,37 +56,28 @@ export default class LimitDetailComponent extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.topViewStyle}>
-                    {/*整数*/}
-                    <Picker
-                        style={styles.pickerStyle1}
-                        itemStyle={styles.itemStyle}
-                        selectedValue={this.state.largerValue}
-                        onValueChange={(lang) => this.setState({largerValue:lang})}>
-                        {this.getItems1.map((value)=> <Picker.Item label={value.key} value={value.key} key={value.key}/> )}
-                    </Picker>
+                    <Wheel
+                    style={{height: 200, width: 50}}
+                    itemStyle={{textAlign: 'center', fontSize: 20}}
+                    items={this.item1}
+                    //index={35}
+                    holeStyle={{height: 50}}
+                    onChange={index => this.setState({largerValue: this.item1[index]})}
+                    />
+                    <Wheel
+                    style={{height: 200, width: 50}}
+                    itemStyle={{textAlign: 'center', fontSize: 20}}
+                    items={this.item2}
+                    //index={5}
+                    holeStyle={{height: 50}}
+                    onChange={index => this.setState({decimalValue: this.item2[index]})}
+                    />
 
+                    <Text style={{fontSize: 15, position: 'absolute', top: 120, left: 70}}
+                    >&bull;</Text>
 
-                    <Picker
-                        style={styles.pickerStyle1}
-                        itemStyle={{color:LowerThemeColors.ccolor, fontSize:30}}>
-                        <Picker.Item label='&bull;' />
-                    </Picker>
-
-                    {/*小数*/}
-                    <Picker
-                        style={styles.pickerStyle2}
-                        itemStyle={styles.itemStyle}
-                        selectedValue={this.state.decimalValue}
-                        onValueChange={(lang) => this.setState({decimalValue:lang})}>
-                        {this.getItems2.map((value)=> <Picker.Item label={value.key} value={value.key} key={value.key}/> )}
-                    </Picker>
-
-                    <Picker
-                        style={styles.pickerStyle1}
-                        itemStyle={{color:LowerThemeColors.ccolor, fontSize:30}}>
-                        <Picker.Item label='℃' />
-                    </Picker>
-
+                    <Text style={{fontSize: 15, position: 'absolute', top: 100, right: 10}}>℃</Text>
+                    
                 </View>
 
                 <View style={styles.bottomStyle}>
@@ -97,8 +94,8 @@ export default class LimitDetailComponent extends Component {
             </View>
         );
     }
-    getItems1 = [{key:'30'},{key:'31'},{key:'32'},{key:'33'},{key:'34'},{key:'35'},{key:'36'},{key:'37'},{key:'38'},{key:'39'},{key:'40'}];
-    getItems2 = [{key:'0'},{key:'1'},{key:'2'},{key:'3'},{key:'4'},{key:'5'},{key:'6'},{key:'7'},{key:'8'},{key:'9'}];
+    // getItems1 = [{key:'30'},{key:'31'},{key:'32'},{key:'33'},{key:'34'},{key:'35'},{key:'36'},{key:'37'},{key:'38'},{key:'39'},{key:'40'}];
+    // getItems2 = [{key:'0'},{key:'1'},{key:'2'},{key:'3'},{key:'4'},{key:'5'},{key:'6'},{key:'7'},{key:'8'},{key:'9'}];
 
     popScreen = ()=>{
         var {largerValue, decimalValue} = this.state;
@@ -138,6 +135,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems:'center',
         justifyContent:'center',
+        padding: 20,
+        marginTop: 70,
 
 
     },

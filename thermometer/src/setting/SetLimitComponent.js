@@ -8,6 +8,7 @@ import {
     View,
     Image,
     TouchableOpacity,
+    DeviceEventEmitter,
     FlatList,
 } from 'react-native';
 import DBManager from '../tools/DBManager';
@@ -21,26 +22,15 @@ export default class SetLimitComponent extends Component {
             highLimit: '',
             lowerLimit: '',
         };
+        this.DB = new DBManager();
     }
 
     componentDidMount() {
-        let DB = new DBManager();
-        DB.getHighLimit((value)=>{
-            console.log('===高==');
-            console.log(value);
-            this.setState({
-                highLimit: value,
-            });
-        })
-
-        DB.getLowerLimit((value)=>{
-            console.log('===低==');
-            console.log(value);
-            this.setState({
-                lowerLimit: value,
-            });
-        })
-
+        this.loadLimitData();
+        // 实时监听高低温设置
+        this.hightListener =  DeviceEventEmitter.addListener('addLimit',()=>{
+            this.loadLimitData();
+        });
     }
 
     componentWillUnmount() {
@@ -100,6 +90,24 @@ export default class SetLimitComponent extends Component {
 
     itemClick(item){
         this.props.navigation.navigate('LimitDetail',{screenTitle:item.key});
+    }
+
+    loadLimitData(){
+        this.DB.getHighLimit((value)=>{
+            console.log('===高==');
+            console.log(value);
+            this.setState({
+                highLimit: value,
+            });
+        })
+
+        this.DB.getLowerLimit((value)=>{
+            console.log('===低==');
+            console.log(value);
+            this.setState({
+                lowerLimit: value,
+            });
+        })
     }
 
 
