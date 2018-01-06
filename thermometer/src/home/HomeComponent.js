@@ -278,7 +278,7 @@ export default class HomeComponent extends Component {
         }
     };
 
-    handleMessage = (evt: any) => {
+    handleMessage = (evt) => {
         const message = evt.nativeEvent.data
         console.log('web输出：');
         console.log(message);
@@ -356,7 +356,7 @@ export default class HomeComponent extends Component {
     playSound(meg){
         Sound.setCategory('Playback');
         this.stopSound;
-        this.whoosh = new Sound('3462.wav', Sound.MAIN_BUNDLE, (error) => {
+        this.whoosh = new Sound('note.wav', Sound.MAIN_BUNDLE, (error) => {
             if (error) {
                 console.log('failed to load the sound', error);
                 return;
